@@ -1,26 +1,58 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Switch, withRouter} from 'react-router-dom'
+import LogIn from './components/LogIn'
+import { handleLogin, validate } from './services/api'
+import HomePage from './pages/HomePage'
+import Landing from './components/Landing'
+import SearchResults from './pages/SearchResults'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export class App extends React.Component {
+
+  state = {
+    user: ''
+  }
+
+  signIn = (user) => {
+    this.setState({ user: user.name })
+    localStorage.setItem('token', user.token)
+    this.props.history.push('/landing')
+  }
+
+  signOut = () => {
+    this.setState({ user: '' })
+    localStorage.removeItem('token')
+  }
+
+  componentDidMount () {
+    
+    if (localStorage.token) {
+      validate()
+        .then(data => {
+          if (data.error) {
+            alert(data.error)
+          } else {
+            this.signIn(data)
+          }
+        })
+    }
+  } 
+
+  render() {
+
+    return (
+    
+      <div className="App">
+  
+      <Switch>
+        <Route exact path='/' component={props => <HomePage user={this.state.user} {...props}/>}/>
+        <Route path='/log_in' component={props => <LogIn signIn={this.signIn} handleLogin={handleLogin} {...props}/>}/>
+        <Route path= '/landing' component={props => <Landing user={this.state.user} signOut={this.signOut} {...props}/>}/>
+        <Route path= '/results' component={props => <SearchResults {...props}/>}/>
+      </Switch>
+        
+      </div>
+    );
+  }
 }
 
-export default App;
+export default withRouter(App);
