@@ -52,9 +52,13 @@ class Landing extends Component {
             if (data.error) {
                 alert(data.error)
             } else {
-                this.setState({inventory: data})
+                this.setState({ inventory: data })
             }
         })
+    }
+
+    updateInventory = (track) => {
+        this.setState({ inventory: [track, ...this.state.inventory]})
     }
 
     componentDidMount () {
@@ -67,7 +71,7 @@ class Landing extends Component {
 
     }
     render() {
-        const { inventory } = this.state
+        const { inventory, videoId, selectedTitle } = this.state
         // console.log('props:', this.props)
         return (
             <div>
@@ -86,7 +90,7 @@ class Landing extends Component {
                     }
                 </div>
                 <div>
-                    <MediaCard videoId={this.state.videoId} title={this.state.selectedTitle} user={this.props.user}/>
+                    <MediaCard videoId={videoId} title={selectedTitle} user={this.props.user} updateInventory={this.updateInventory}/>
                 </div>
                 <div>
                     <SongTable inventory={inventory}/>

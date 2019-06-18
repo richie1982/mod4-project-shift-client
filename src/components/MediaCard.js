@@ -31,7 +31,12 @@ const useStyles = makeStyles({
 
 export default function MediaCard(props) {
   const classes = useStyles();
-  const { title, videoId, user } = props
+  const { title, videoId, user, updateInventory  } = props
+
+  const handleSaveTrack = () => {
+    saveTrack(title, videoId, user)
+        .then(data => updateInventory(data))
+  }
 
   return (
     <Card className={classes.card} >
@@ -50,7 +55,7 @@ export default function MediaCard(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button onClick={() => saveTrack(title, videoId, user)}size="small">Save Track</Button>
+        <Button onClick={handleSaveTrack} size="small">Save Track</Button>
       </CardActions>
     </Card>
   );
