@@ -39,6 +39,7 @@ export default function MediaCard(props) {
             if (data.id === null) {
                 alert("No track selected")
             } else {
+                console.log(data)
                 updateInventory(data)
             }
         })

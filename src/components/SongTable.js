@@ -26,7 +26,7 @@ function createData(title, artist, genre) {
 
 const rows = (props) => {
     const inventoryCopy = [...props.inventory]
-    return inventoryCopy.map((track) => createData(track.title, track.artist))
+    return inventoryCopy.map((track) => createData(track.title, track.artist, track.id))
 }
 
 function desc(a, b, orderBy) {
@@ -157,7 +157,7 @@ const EnhancedTableToolbar = props => {
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton aria-label="Delete">
-              <DeleteIcon />
+              <DeleteIcon onClick={null}/>
             </IconButton>
           </Tooltip>
         ) : (
@@ -219,6 +219,8 @@ export default function EnhancedTable(props) {
   }
 
   function handleClick(event, name) {
+    // console.log(event.currentTarget.querySelector('span.MuiButtonBase-root'))
+    // PrivateSwitchBase-checked-166
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -234,9 +236,9 @@ export default function EnhancedTable(props) {
         selected.slice(selectedIndex + 1),
       );
     }
-
     setSelected(newSelected);
-  }
+    props.deleteSelection(name)
+}
 
   function handleChangePage(event, newPage) {
     setPage(newPage);
@@ -276,17 +278,17 @@ export default function EnhancedTable(props) {
               {stableSort(rows(props), getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.title);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.name)}
+                      onClick={event => handleClick(event, row.title)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.title}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

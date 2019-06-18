@@ -17,7 +17,8 @@ class Landing extends Component {
         videoId: '',
         searchActive: false,
         results: [],
-        selectedTitle: ""
+        selectedTitle: "",
+        selected: []
     }
 
     handleSubmit = (e) => {
@@ -32,6 +33,10 @@ class Landing extends Component {
             videoId: id,
             selectedTitle: title
         })
+    }
+
+    deleteSelection = (track) => {
+        this.setState({selected: [...this.state.selected, track]})
     }
 
     setSearchTerm = (text) => {
@@ -59,6 +64,10 @@ class Landing extends Component {
 
     updateInventory = (track) => {
         this.setState({ inventory: [track, ...this.state.inventory]})
+    }
+
+    updateDeletedInventory = (track) => {
+        this.setState({ inventory: this.state.inventory.filter(el => track !== el) })
     }
 
     componentDidMount () {
@@ -93,7 +102,7 @@ class Landing extends Component {
                     <MediaCard videoId={videoId} title={selectedTitle} user={this.props.user} updateInventory={this.updateInventory}/>
                 </div>
                 <div>
-                    <SongTable inventory={inventory}/>
+                    <SongTable inventory={inventory} deleteSelection={this.deleteSelection}/>
                 </div>
                 {inventory.length === 0 &&
                     <p>No songs in your directory</p>}
