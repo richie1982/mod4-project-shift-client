@@ -24,10 +24,9 @@ function createData(title, artist, genre) {
   return { title, artist, genre };
 }
 
-
 const rows = (props) => {
     const inventoryCopy = [...props.inventory]
-    return inventoryCopy.map((track) => createData(track.title, track.artist, track.genre))
+    return inventoryCopy.map((track) => createData(track.title, track.artist))
 }
 
 function desc(a, b, orderBy) {
@@ -57,7 +56,6 @@ function getSorting(order, orderBy) {
 const headRows = [
   { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
   { id: 'artist', numeric: false, disablePadding: false, label: 'Artist' },
-  { id: 'genre', numeric: false, disablePadding: false, label: 'Genre' },
 ];
 
 function EnhancedTableHead(props) {
@@ -74,7 +72,7 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'Select all desserts' }}
+            inputProps={{ 'aria-label': 'Select all' }}
           />
         </TableCell>
         {headRows.map(row => (
@@ -301,7 +299,6 @@ export default function EnhancedTable(props) {
                         {row.title}
                       </TableCell>
                       <TableCell align="left">{row.artist}</TableCell>
-                      <TableCell align="left">{row.genre}</TableCell>
                     </TableRow>
                   );
                 })}

@@ -35,7 +35,13 @@ export default function MediaCard(props) {
 
   const handleSaveTrack = () => {
     saveTrack(title, videoId, user)
-        .then(data => updateInventory(data))
+        .then(data => {
+            if (data.id === null) {
+                alert("No track selected")
+            } else {
+                updateInventory(data)
+            }
+        })
   }
 
   return (
