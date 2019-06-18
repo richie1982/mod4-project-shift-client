@@ -53,16 +53,16 @@ export const saveTrack = (title, videoId, user) => {
     }).then(resp => resp.json())
 }
 
-// export const deleteTrack = (username, trackId) => {
-//     return fetch(baseUrl +'/delete_track', {
-//         method: 'DELETE',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({
-//             track_id: trackId,
-//             user_name: username
-//         })
-//     }).then(resp => resp.json())
-// }
+export const deleteTrack = (username, trackId) => {
+    return fetch(baseUrl +'/delete_track', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            user_name: username,
+            track_id: trackId
+        })
+    }).then(resp => resp.json())
+}
 
 
 export const deleteTracks = (username, ...trackIds) => {
@@ -82,4 +82,4 @@ window.deleteTracks = deleteTracks
 // deleteTracks('richie', 4, 7, 8, 9)
 
 
-export default { handleLogin, userInventory, validate, fetchSearch, saveTrack, deleteTracks }
+export default { handleLogin, userInventory, validate, fetchSearch, saveTrack, deleteTracks, deleteTrack }

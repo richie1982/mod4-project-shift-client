@@ -19,14 +19,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import { deleteTrack } from '../services/api'
 
-function createData(title, artist, genre) {
-  return { title, artist, genre };
+function createData(title, artist, trackId, videoId) {
+  return { title, artist, trackId, videoId };
 }
 
 const rows = (props) => {
     const inventoryCopy = [...props.inventory]
-    return inventoryCopy.map((track) => createData(track.title, track.artist, track.id))
+    return inventoryCopy.map((track) => createData(track.title, track.artist, track.id, track.video_id))
 }
 
 function desc(a, b, orderBy) {
@@ -56,6 +57,7 @@ function getSorting(order, orderBy) {
 const headRows = [
   { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
   { id: 'artist', numeric: false, disablePadding: false, label: 'Artist' },
+  { id: 'delete', numeric: false, disablePadding: false, label: 'Delete' },
 ];
 
 function EnhancedTableHead(props) {
@@ -67,19 +69,12 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'Select all' }}
-          />
-        </TableCell>
+        
         {headRows.map(row => (
           <TableCell
             key={row.id}
             align={row.numeric ? 'right' : 'left'}
-            padding={row.disablePadding ? 'none' : 'default'}
+            padding='default'
             sortDirection={orderBy === row.id ? order : false}
           >
             <TableSortLabel
@@ -142,32 +137,13 @@ const EnhancedTableToolbar = props => {
       })}
     >
       <div className={classes.title}>
-        {numSelected > 0 ? (
-          <Typography color="inherit" variant="subtitle1">
-            {numSelected} selected
-          </Typography>
-        ) : (
+        
           <Typography variant="h6" id="tableTitle">
             Library
           </Typography>
-        )}
       </div>
       <div className={classes.spacer} />
-      <div className={classes.actions}>
-        {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
-              <DeleteIcon onClick={null}/>
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="Filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-      </div>
+      
     </Toolbar>
   );
 };
@@ -209,37 +185,15 @@ export default function EnhancedTable(props) {
     setOrderBy(property);
   }
 
-  function handleSelectAllClick(event) {
-    if (event.target.checked) {
-      const newSelecteds = rows(props).map(n => n.title);
-      setSelected(newSelecteds);
-      return;
+ 
+    const handleDelete = (user, id) => {
+        deleteTrack(user, id)
+            .then(data => {
+                console.log(data)
+                props.updateDeletedInventory(data)
+            })
     }
-    setSelected([]);
-  }
-
-  function handleClick(event, name) {
-    // console.log(event.currentTarget.querySelector('span.MuiButtonBase-root'))
-    // PrivateSwitchBase-checked-166
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
-    props.deleteSelection(name)
-}
-
+  
   function handleChangePage(event, newPage) {
     setPage(newPage);
   }
@@ -252,7 +206,6 @@ export default function EnhancedTable(props) {
     setDense(event.target.checked);
   }
 
-  const isSelected = name => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows(props).length - page * rowsPerPage);
 
@@ -270,7 +223,6 @@ export default function EnhancedTable(props) {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows(props).length}
             />
@@ -278,29 +230,26 @@ export default function EnhancedTable(props) {
               {stableSort(rows(props), getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.title);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.title)}
+                      onClick={null}
                       role="checkbox"
-                      aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.title}
-                      selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      
+                      <TableCell onClick={() => props.handleSelection(row.videoId, row.title)} component="th" id={labelId} scope="row" padding="default">
                         {row.title}
                       </TableCell>
                       <TableCell align="left">{row.artist}</TableCell>
+                      <TableCell align="left">
+                      <IconButton aria-label="Delete" onClick={() => handleDelete(props.user, row.trackId)}>
+                        <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
