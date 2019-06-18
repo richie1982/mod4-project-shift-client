@@ -83,9 +83,11 @@ class Landing extends Component {
                 </div>
                 <div className="h1Text">
                     {this.props.user &&
-                        <h1>Welcome back {this.props.user}</h1>
+                        <h1 style={{padding:'10px'}}>Welcome back {this.props.user}</h1>
                     }
                 </div>
+                {inventory.length === 0 &&
+                    <p style={{padding:'20px'}}>No songs in your Library</p>}
                 <div>
                     {this.state.searchActive
                     ? <SearchResults results={this.state.results} handleSelection={this.handleSelection}/> 
@@ -98,8 +100,6 @@ class Landing extends Component {
                 <div>
                     <SongTable user={this.props.user} inventory={inventory} updateDeletedInventory={this.updateDeletedInventory} handleSelection={this.handleSelection}/>
                 </div>
-                {inventory.length === 0 &&
-                    <p>No songs in your directory</p>}
             </div>
         );
     }
