@@ -5,6 +5,7 @@ import { handleLogin, validate } from './services/api'
 import HomePage from './pages/HomePage'
 import Landing from './components/Landing'
 import SearchResults from './pages/SearchResults'
+import SignUpForm from './components/SignUpForm'
 
 export class App extends React.Component {
 
@@ -16,6 +17,12 @@ export class App extends React.Component {
     this.setState({ user: user.name })
     localStorage.setItem('token', user.token)
     this.props.history.push('/landing')
+  }
+
+  signUp = (user) => {
+    this.setState({ user: user.name })
+    localStorage.setItem('token', user.token )
+    this.props.history.push('./landing')
   }
 
   signOut = () => {
@@ -45,9 +52,9 @@ export class App extends React.Component {
   
       <Switch>
         <Route exact path='/' component={props => <HomePage user={this.state.user} {...props}/>}/>
+        <Route path='/sign_up' component={props => <SignUpForm {...props} signUp={this.signUp}/>}/>
         <Route path='/log_in' component={props => <LogIn signIn={this.signIn} handleLogin={handleLogin} {...props}/>}/>
         <Route path= '/landing' component={props => <Landing user={this.state.user} signOut={this.signOut} {...props}/>}/>
-        <Route path= '/results' component={props => <SearchResults {...props}/>}/>
       </Switch>
         
       </div>

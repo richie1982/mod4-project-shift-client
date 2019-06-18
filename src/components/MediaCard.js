@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import MediaPlayer from './MediaPlayer'
+import { saveTrack } from '../services/api'
 
 
 const useStyles = makeStyles({
@@ -30,7 +31,7 @@ const useStyles = makeStyles({
 
 export default function MediaCard(props) {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+  const { title, videoId, user } = props
 
   return (
     <Card className={classes.card} >
@@ -49,7 +50,7 @@ export default function MediaCard(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button onClick={() => saveTrack(title, videoId, user)}size="small">Save Track</Button>
       </CardActions>
     </Card>
   );

@@ -86,7 +86,7 @@ class Landing extends Component {
                     }
                 </div>
                 <div>
-                    <MediaCard videoId={this.state.videoId} title={this.state.selectedTitle}/>
+                    <MediaCard videoId={this.state.videoId} title={this.state.selectedTitle} user={this.props.user}/>
                 </div>
                 <div>
                     <SongTable inventory={inventory}/>

@@ -10,6 +10,17 @@ export const fetchSearch = (text) => {
         .then(resp => resp.json())
 }
 
+export const handleSignUp = (name, password) => {
+    return fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: name,
+            password: password
+        })
+    }).then(resp => resp.json())
+}
+
 export const handleLogin = (name, password) => {
     return fetch(logInUrl, {
 	    method: 'POST',
@@ -30,4 +41,16 @@ export const validate = () => {
     }).then(resp => resp.json())
 }
 
-export default { handleLogin, userInventory, validate, fetchSearch }
+export const saveTrack = (title, videoId, user) => {
+    return fetch(baseUrl + '/tracks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            title: title,
+            video_id: videoId,
+            user_name: user
+        })
+    }).then(resp => resp.json())
+}
+
+export default { handleLogin, userInventory, validate, fetchSearch, saveTrack }

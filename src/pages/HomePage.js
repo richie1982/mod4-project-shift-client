@@ -34,7 +34,7 @@ export default function HomePage (props) {
     return(
         <div>
             <div>
-                <SearchAppBar signOut={props.signOut}/>
+                <SearchAppBar />
             </div>
                 <div style={{backgroundSize: "contain"}}>
                     <img src={filePath} alt={"home page"} style={imgStyle}/>

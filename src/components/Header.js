@@ -91,8 +91,11 @@ export default function SearchAppBar(props) {
           <Typography className={classes.title} variant="h6" noWrap>
           {props.user
             ? <Link to='/' onClick={props.signOut} style={{textDecoration: "none", color: "white"}}>Sign-out</Link>
-            : <Link to='/log_in' style={{textDecoration: "none", color: "white"}}>Sign-in</Link>
-          }
+            : <div>
+            <Link to='/log_in' style={{textDecoration: "none", color: "white"}}>{'Sign-in  '}</Link> |
+            <Link to='/sign_up' style={{textDecoration: "none", color: "white"}}>{'  Create Account'}</Link>
+            </div> 
+            }
           </Typography>
           {props.user
           ?<form className={classes.search} onSubmit={props.handleSubmit}>
